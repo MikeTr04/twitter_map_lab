@@ -27,6 +27,7 @@ def index():
         print(locations)
         geocoder = Nominatim(user_agent="mykhailo.trushch@gmail.com")
         user_location = twitter.user_loc(username)
+        print(user_location)
         if user_location is not None:
             map1 = folium.Map(zoom_start=10, location=[user_location.lat, user_location.lon])
         else:
