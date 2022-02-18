@@ -47,25 +47,29 @@ def locations(username: str) -> dict:
     >>> locations("miketrushch")
     {'BorisJohnson': 'United Kingdom'}
     """
-    search_url1 = "https://api.twitter.com/2/users/by/username/"
-    search_url1 += username
-    json_response = connect_to_endpoint(search_url1)
-    ind = json_response['data']['id']
+    try:
+        search_url1 = "https://api.twitter.com/2/users/by/username/"
+        search_url1 += username
+        json_response = connect_to_endpoint(search_url1)
+        ind = json_response['data']['id']
 
-    search_url2 = "https://api.twitter.com/2/users/" + ind + "/following"
-    following = connect_to_endpoint(search_url2)['data']
-    people = [i['username'] for i in following]
-    people = ",".join(people)
-    people = f'usernames={people}'
+        search_url2 = "https://api.twitter.com/2/users/" + ind + "/following"
+        following = connect_to_endpoint(search_url2)['data']
+        people = [i['username'] for i in following]
+        people = ",".join(people)
+        people = f'usernames={people}'
 
-    user_fields = "user.fields=description,id,pinned_tweet_id,location"
-    search_url3 = f"https://api.twitter.com/2/users/by?{people}&{user_fields}"
-    users = connect_to_endpoint(search_url3)['data']
-    loc = {}
-    for i in users:
-        if 'location' in i.keys():
-            loc[i['username']] = i['location']
-    return loc
+        user_fields = "user.fields=description,id,pinned_tweet_id,location"
+        search_url3 = f"https://api.twitter.com/2/users/by?{people}&{user_fields}"
+        users = connect_to_endpoint(search_url3)['data']
+        loc = {}
+        for i in users:
+            if 'location' in i.keys():
+                loc[i['username']] = i['location']
+        return loc
+    except Exception:
+        print("EX")
+    return None
 
 
 def user_loc(username):
@@ -80,14 +84,18 @@ def user_loc(username):
     >>> user_loc("BorisJohnson")
     {'BorisJohnson': 'United Kingdom'}
     """
-    user_fields = "user.fields=description,id,pinned_tweet_id,location"
-    search_url = f"https://api.twitter.com/2/users/by?usernames={username}&{user_fields}"
-    users = connect_to_endpoint(search_url)['data']
-    loc = {}
-    for i in users:
-        if 'location' in i.keys():
-            loc[i['username']] = i['location']
-    return loc if loc else None
+    try:
+        user_fields = "user.fields=description,id,pinned_tweet_id,location"
+        search_url = f"https://api.twitter.com/2/users/by?usernames={username}&{user_fields}"
+        users = connect_to_endpoint(search_url)['data']
+        loc = {}
+        for i in users:
+            if 'location' in i.keys():
+                loc[i['username']] = i['location']
+        return loc if loc else None
+    except Exception:
+        print("EX")
+        return None
 
 
 if __name__ == "__main__":
